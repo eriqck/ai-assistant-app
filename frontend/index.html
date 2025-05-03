@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ask AI Assistant</title>
+  <style>
+    body { font-family: Arial; max-width: 600px; margin: 2rem auto; }
+    textarea { width: 100%; height: 100px; padding: 10px; }
+    button { padding: 10px 20px; margin-top: 10px; }
+    .response { margin-top: 20px; white-space: pre-wrap; background: #f9f9f9; padding: 10px; border: 1px solid #ccc; }
+  </style>
+</head>
+<body>
+  <h2>Ask QuickAI</h2>
+  <textarea id="question" placeholder="Type your question here..."></textarea>
+  <br />
+  <button onclick="ask()">Ask</button>
+  <div class="response" id="response"></div>
+
+  <script>
+    async function ask() {
+      const question = document.getElementById("question").value;
+      const responseBox = document.getElementById("response");
+
+      responseBox.innerText = "Thinking...";
+
+      try {
+        const res = await fetch("http://127.0.0.1:8000/ask", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ question })
+        });
+
+        const data = await res.json();
+        responseBox.innerText = data.answer || "No answer returned.";
+      } catch (err) {
+        console.error(err);
+        responseBox.innerText = "Error: Trouble Reaching The Server.";
+      }
+    }
+  </script>
+</body>
+</html>
